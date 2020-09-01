@@ -8,7 +8,7 @@ from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score  # 导入交叉验证后的分数
 from sklearn.metrics import classification_report
-import numpy as np
+import pandas as pd
 
 
 # 先处理空缺的数据
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     x_test, y_test = deal_test(test_data, real_label_data)
 
     # 建立模型
-    rf = RandomForestClassifier(n_estimators=50, max_depth=3, min_samples_split=4)
+    rf = RandomForestClassifier(n_estimators=50, max_depth=4, min_samples_split=4)
     bagging = BaggingClassifier(rf, n_estimators=20)
     bagging.fit(x_train, y_train)
 
@@ -86,3 +86,11 @@ if __name__ == '__main__':
     # 评估
     print(bagging.score(x_test, y_test))
     print((classification_report(prediction, y_test)))
+
+    # 保存预测结果为csv
+    submission = pd.DataFrame({
+        "PassengerId": test_data["PassengerId"],
+        "Survived": prediction
+    })
+
+    submission.to_csv('predict.csv', index=False)
