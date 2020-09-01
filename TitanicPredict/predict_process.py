@@ -89,9 +89,9 @@ if __name__ == '__main__':
     print((classification_report(prediction, y_test)))
 
     # 保存预测结果为csv
-    # submission = pd.DataFrame({
-    #     "PassengerId": test_data["PassengerId"],
-    #     "Survived": prediction
-    # })
-    #
-    # submission.to_csv('predict.csv', index=False)
+    submission = pd.DataFrame({
+        "PassengerId": test_data["PassengerId"],
+        "Survived": prediction
+    })
+
+    submission.to_csv('predict.csv', index=False)
