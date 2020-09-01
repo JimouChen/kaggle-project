@@ -1,5 +1,5 @@
 """
-# @Time    :  2020/9/1
+# @Time    :  2020/9/2
 # @Author  :  Jimou Chen
 """
 import sys
@@ -76,55 +76,17 @@ if __name__ == '__main__':
     x_train, y_train = deal_train(train_data)
     x_test, y_test = deal_test(test_data, real_label_data)
 
-    '''迭代找到最好的预测数据'''
-    score = 0
-    i = 1
-    while True:
-        rf = RandomForestClassifier(n_estimators=2, max_depth=3, min_samples_split=4)
-        bagging = BaggingClassifier(rf, n_estimators=70)
-        bagging.fit(x_train, y_train)
-        # 预测
-        prediction = bagging.predict(x_test)
-        # 评估
-        score = bagging.score(x_test, y_test)
-        print(score, '---->', i)
-
-        if score >= 0.99:
-            submission = pd.DataFrame({
-                "PassengerId": test_data["PassengerId"],
-                "Survived": prediction
-            })
-            submission.to_csv('predict_data.csv', index=False)
-            break
-
-        if score >= 0.986:
-            submission = pd.DataFrame({
-                "PassengerId": test_data["PassengerId"],
-                "Survived": prediction
-            })
-            submission.to_csv('predict_data.csv', index=False)
-            break
-
-        i = i + 1
-
-    # 10,60,4
-    # 10,50,4
-    # 10,38,3
-    # 10,12,3  96
-    # 2, 63, 3
-    # 2, 70, 3/4
-
     # 建立模型
-    # rf = RandomForestClassifier(n_estimators=10, max_depth=3, min_samples_split=4)
-    # bagging = BaggingClassifier(rf, n_estimators=12)
-    # bagging.fit(x_train, y_train)
-    #
-    # # 预测
-    # prediction = bagging.predict(x_test)
-    #
-    # # 评估
-    # print(bagging.score(x_test, y_test))
-    # print((classification_report(prediction, y_test)))
+    rf = RandomForestClassifier(n_estimators=10, max_depth=3, min_samples_split=4)
+    bagging = BaggingClassifier(rf, n_estimators=12)
+    bagging.fit(x_train, y_train)
+
+    # 预测
+    prediction = bagging.predict(x_test)
+
+    # 评估
+    print(bagging.score(x_test, y_test))
+    print((classification_report(prediction, y_test)))
 
     # 保存预测结果为csv
     # submission = pd.DataFrame({
@@ -133,4 +95,3 @@ if __name__ == '__main__':
     # })
     #
     # submission.to_csv('predict.csv', index=False)
-# 0.9569377990430622
