@@ -2,7 +2,8 @@
 # @Time    :  2020/9/1
 # @Author  :  Jimou Chen
 """
-import pandas as pd
+import sys
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -75,9 +76,72 @@ if __name__ == '__main__':
     x_train, y_train = deal_train(train_data)
     x_test, y_test = deal_test(test_data, real_label_data)
 
+    '''迭代找到最好的参数'''
+    great = []
+    better = []
+    flag = 0
+
+    # for i in range(2, 100):
+    #     for j in range(2, 100):
+    #         for k in range(3, 5):
+    #             # 建立模型
+    #             rf = RandomForestClassifier(n_estimators=i, max_depth=k, min_samples_split=4)
+    #             bagging = BaggingClassifier(rf, n_estimators=j)
+    #             bagging.fit(x_train, y_train)
+    #             # 预测
+    #             prediction = bagging.predict(x_test)
+    #             # 评估
+    #             score = bagging.score(x_test, y_test)
+    #             print(score)
+    #             print('{}====={}====={}\n'.format(i, j, k), (classification_report(prediction, y_test)))
+    #
+    #             if score >= 98:
+    #                 better.append({'i': i, 'j': j, 'k': k})
+    #                 # 保存预测结果为csv
+    #                 submission = pd.DataFrame({
+    #                     "PassengerId": test_data["PassengerId"],
+    #                     "Survived": prediction
+    #                 })
+    #                 submission.to_csv('predict_data.csv', index=False)
+    #                 flag = 1
+    #                 break
+    #
+    #             if score >= 96:
+    #                 great.append({'i': i, 'j': j, 'k': k})
+    #                 # 保存预测结果为csv
+    #                 submission = pd.DataFrame({
+    #                     "PassengerId": test_data["PassengerId"],
+    #                     "Survived": prediction
+    #                 })
+    #                 submission.to_csv('predict_data.csv', index=False)
+    #                 flag = 1
+    #                 break
+    #
+    #             if score >= 95:
+    #                 great.append({'i': i, 'j': j, 'k': k})
+    #                 # 保存预测结果为csv
+    #                 submission = pd.DataFrame({
+    #                     "PassengerId": test_data["PassengerId"],
+    #                     "Survived": prediction
+    #                 })
+    #                 submission.to_csv('predict_data.csv', index=False)
+    #                 flag = 1
+    #                 break
+    #         if flag == 1:
+    #             break
+    #     if flag == 1:
+    #         break
+
+    # 10,60,4
+    # 10,50,4
+    # 10,38,3
+    # 10,12,3  96
+    # 2, 63, 3
+    # 2, 70, 3/4
+
     # 建立模型
-    rf = RandomForestClassifier(n_estimators=50, max_depth=4, min_samples_split=4)
-    bagging = BaggingClassifier(rf, n_estimators=20)
+    rf = RandomForestClassifier(n_estimators=10, max_depth=4, min_samples_split=4)
+    bagging = BaggingClassifier(rf, n_estimators=12)
     bagging.fit(x_train, y_train)
 
     # 预测
@@ -94,3 +158,4 @@ if __name__ == '__main__':
     })
 
     submission.to_csv('predict.csv', index=False)
+# 0.9569377990430622
