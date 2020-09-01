@@ -7,7 +7,6 @@ import sys
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score  # 导入交叉验证后的分数
 from sklearn.metrics import classification_report
 import pandas as pd
 
