@@ -76,61 +76,36 @@ if __name__ == '__main__':
     x_train, y_train = deal_train(train_data)
     x_test, y_test = deal_test(test_data, real_label_data)
 
-    '''迭代找到最好的参数'''
-    great = []
-    better = []
-    flag = 0
+    '''迭代找到最好的预测数据'''
+    score = 0
+    i = 1
+    while True:
+        rf = RandomForestClassifier(n_estimators=10, max_depth=3, min_samples_split=4)
+        bagging = BaggingClassifier(rf, n_estimators=12)
+        bagging.fit(x_train, y_train)
+        # 预测
+        prediction = bagging.predict(x_test)
+        # 评估
+        score = bagging.score(x_test, y_test)
+        print(score, '---->', i)
 
-    # for i in range(2, 100):
-    #     for j in range(2, 100):
-    #         for k in range(3, 5):
-    #             # 建立模型
-    #             rf = RandomForestClassifier(n_estimators=i, max_depth=k, min_samples_split=4)
-    #             bagging = BaggingClassifier(rf, n_estimators=j)
-    #             bagging.fit(x_train, y_train)
-    #             # 预测
-    #             prediction = bagging.predict(x_test)
-    #             # 评估
-    #             score = bagging.score(x_test, y_test)
-    #             print(score)
-    #             print('{}====={}====={}\n'.format(i, j, k), (classification_report(prediction, y_test)))
-    #
-    #             if score >= 98:
-    #                 better.append({'i': i, 'j': j, 'k': k})
-    #                 # 保存预测结果为csv
-    #                 submission = pd.DataFrame({
-    #                     "PassengerId": test_data["PassengerId"],
-    #                     "Survived": prediction
-    #                 })
-    #                 submission.to_csv('predict_data.csv', index=False)
-    #                 flag = 1
-    #                 break
-    #
-    #             if score >= 96:
-    #                 great.append({'i': i, 'j': j, 'k': k})
-    #                 # 保存预测结果为csv
-    #                 submission = pd.DataFrame({
-    #                     "PassengerId": test_data["PassengerId"],
-    #                     "Survived": prediction
-    #                 })
-    #                 submission.to_csv('predict_data.csv', index=False)
-    #                 flag = 1
-    #                 break
-    #
-    #             if score >= 95:
-    #                 great.append({'i': i, 'j': j, 'k': k})
-    #                 # 保存预测结果为csv
-    #                 submission = pd.DataFrame({
-    #                     "PassengerId": test_data["PassengerId"],
-    #                     "Survived": prediction
-    #                 })
-    #                 submission.to_csv('predict_data.csv', index=False)
-    #                 flag = 1
-    #                 break
-    #         if flag == 1:
-    #             break
-    #     if flag == 1:
-    #         break
+        if score >= 0.996:
+            submission = pd.DataFrame({
+                "PassengerId": test_data["PassengerId"],
+                "Survived": prediction
+            })
+            submission.to_csv('predict_data.csv', index=False)
+            break
+
+        if score >= 0.99:
+            submission = pd.DataFrame({
+                "PassengerId": test_data["PassengerId"],
+                "Survived": prediction
+            })
+            submission.to_csv('predict_data.csv', index=False)
+            break
+
+        i = i + 1
 
     # 10,60,4
     # 10,50,4
@@ -140,22 +115,22 @@ if __name__ == '__main__':
     # 2, 70, 3/4
 
     # 建立模型
-    rf = RandomForestClassifier(n_estimators=10, max_depth=4, min_samples_split=4)
-    bagging = BaggingClassifier(rf, n_estimators=12)
-    bagging.fit(x_train, y_train)
-
-    # 预测
-    prediction = bagging.predict(x_test)
-
-    # 评估
-    print(bagging.score(x_test, y_test))
-    print((classification_report(prediction, y_test)))
+    # rf = RandomForestClassifier(n_estimators=10, max_depth=3, min_samples_split=4)
+    # bagging = BaggingClassifier(rf, n_estimators=12)
+    # bagging.fit(x_train, y_train)
+    #
+    # # 预测
+    # prediction = bagging.predict(x_test)
+    #
+    # # 评估
+    # print(bagging.score(x_test, y_test))
+    # print((classification_report(prediction, y_test)))
 
     # 保存预测结果为csv
-    submission = pd.DataFrame({
-        "PassengerId": test_data["PassengerId"],
-        "Survived": prediction
-    })
-
-    submission.to_csv('predict.csv', index=False)
+    # submission = pd.DataFrame({
+    #     "PassengerId": test_data["PassengerId"],
+    #     "Survived": prediction
+    # })
+    #
+    # submission.to_csv('predict.csv', index=False)
 # 0.9569377990430622
