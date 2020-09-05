@@ -8,10 +8,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
 
-# train_data = pd.read_csv('data/Churn-Modelling.csv')
-# test_data = pd.read_csv('data/Churn-Modelling-Test-Data.csv')
-
-
 def deal_train(path):
     train_data = pd.read_csv(path)
     # 处理国家转换为数字
