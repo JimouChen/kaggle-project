@@ -43,3 +43,4 @@ if __name__ == '__main__':
     # 预测
     pred = lr.predict(x_test)
     print(classification_report(pred, y_test))
+    print(lr.score(x_test, y_test))
