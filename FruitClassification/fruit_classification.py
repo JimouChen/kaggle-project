@@ -16,7 +16,13 @@ def handle_data():
     # 把英文标签编码为数字白标签
     le = LabelEncoder()
     data.iloc[:, 0] = le.fit_transform(data.iloc[:, 0])
+
+    return data
     # print(data)
+
+
+if __name__ == '__main__':
+    data = handle_data()
     # 切分数据集
     x_data = data.iloc[:, 1:]
     y_data = data.iloc[:, 0]
@@ -38,10 +44,6 @@ def handle_data():
 
     model = KNeighborsClassifier(n_neighbors=best_k)
     model.fit(x_train, y_train)
-
+    # 预测和评估
     prediction = model.predict(x_test)
     print(classification_report(prediction, y_test))
-
-
-if __name__ == '__main__':
-    handle_data()
