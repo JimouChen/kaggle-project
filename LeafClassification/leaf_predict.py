@@ -2,11 +2,7 @@
 # @Time    :  2020/9/8
 # @Author  :  Jimou Chen
 """
-import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
