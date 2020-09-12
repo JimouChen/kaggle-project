@@ -29,17 +29,21 @@ def handle_en_msg():
 def handle_in_ticket():
     data = pd.read_excel('in_data.xlsx')
     all_level = handle_en_msg()
+    all_lay = handle_lay_data()
+    print(all_lay)
     data['信誉评级'] = 0
+    data['是否违约'] = 0
+
     c = 0  # 当前data的索引
-    num = list(range(0, 124))  # 序号
+    num = list(range(1, 124))  # 序号
     for i in data.iloc[:, 0]:
-        for j in all_level:
+        for j in num:
             if i == j:
-                # 修改信誉的值
                 data.loc[c, '信誉评级'] = all_level[num.index(j)]
+                data.loc[c, '是否违约'] = all_lay[num.index(j)]
                 break
         c += 1
-    # 保存
+
     save = pd.DataFrame(data)
     save.to_csv('new_in_data.csv', encoding='utf_8_sig')
     print('save finished')
@@ -47,13 +51,65 @@ def handle_in_ticket():
 
 def handle_out_ticket():
     data = pd.read_excel('销项发票信息.xlsx')
+    all_level = handle_en_msg()
+    all_lay = handle_lay_data()
+    print(all_lay)
+    data['信誉评级'] = 0
+    data['是否违约'] = 0
 
+    c = 0  # 当前data的索引
+    num = list(range(1, 124))  # 序号
+    for i in data.iloc[:, 0]:
+        for j in num:
+            if i == j:
+                data.loc[c, '信誉评级'] = all_level[num.index(j)]
+                data.loc[c, '是否违约'] = all_lay[num.index(j)]
+                break
+        c += 1
+
+    save = pd.DataFrame(data)
+    save.to_csv('new_out_data.csv', encoding='utf_8_sig')
+    print('save finished')
+
+
+def add_in_and_out():
+    in_data = pd.read_csv('new_in_data.csv')
+    out_data = pd.read_csv('new_out_data.csv')
+    df = [in_data, out_data]
+    data = pd.concat(df, ignore_index=True)
     # 保存
-    # save = pd.DataFrame(x_data)
-    # save.to_csv('new_out_ticket.csv', encoding='utf_8_sig')
-    # print('save finished')
+    save = pd.DataFrame(data)
+    save.to_csv('in_out_data.csv', encoding='utf_8_sig')
+    print('save finished')
+
+
+'''合并附件2'''
+
+
+def handle_file2_data():
+    in_data = pd.read_excel('in2_data.xlsx')
+    out_data = pd.read_excel('out2_data.xlsx')
+    df = [in_data, out_data]
+    data = pd.concat(df)
+    # 保存
+    save = pd.DataFrame(data)
+    save.to_csv('file2_data.csv', encoding='utf_8_sig')
+    print('save finished')
+
+
+def handle_lay_data():
+    data = pd.read_excel('企业信息.xlsx')
+    lay = []
+    for i in data.iloc[:, -1]:
+        lay.append(i)
+
+    return lay
 
 
 if __name__ == '__main__':
     # handle_en_msg()
-    handle_in_ticket()
+    # handle_out_ticket()
+    # add_in_and_out()
+    handle_file2_data()
+    # handle_lay_data()
+    # handle_in_ticket()
