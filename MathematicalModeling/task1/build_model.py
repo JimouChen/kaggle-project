@@ -1,16 +1,9 @@
-"""
-# @Time    :  2020/9/10
-# @Author  :  Jimou Chen
-"""
 import pandas as pd
 import numpy as np
-from mlxtend.classifier import StackingClassifier
-from sklearn import model_selection
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-# from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
@@ -192,6 +185,7 @@ def handle_file2():
     print('save finished')
 
 
+# 预测是否违约
 def pred_file2():
     new_data = pd.read_csv('new_file2.csv')
     lay = []
@@ -202,12 +196,88 @@ def pred_file2():
     for j in num:
         for i in new_data.企业代号:
             if i == j and new_data.loc[c, '是否违约'] == 1:
-                lay[j-124] = 1
+                lay[j - 124] = 1
                 break
             else:
                 continue
         c += 1
+
+    for i in range(len(lay)):
+        if i in list(range(0, 302)):
+            lay[i] = 1
+
+
+def pred_level():
+    new_file2 = pd.read_csv('pred_file2.csv')
+    # 最后把违约的设为D
+    lay = list(new_file2.iloc[:, -1])
     print(lay)
+    data = pd.read_csv('new_file2.csv')
+    x_data = data.iloc[:, 3:]
+    # 数据标准化
+    sc = StandardScaler()
+    x_data = sc.fit_transform(x_data)
+    print(x_data)
+    # 建模
+    model = KMeans(n_clusters=4)
+    model.fit_transform(x_data)
+    # 预测
+    prediction = model.predict(x_data)
+    print('预测评级:\n', prediction)
+    # 保存
+    data['预测评级'] = prediction
+    # 保存data
+    save = pd.DataFrame(data)
+    save.to_csv('level_file2.csv', encoding='utf_8_sig')
+    print('save finished')
+
+    a = 0
+    b = 0
+    c = 0
+    d = 0
+    for i in prediction:
+        if i == 0:
+            a += 1
+        elif i == 1:
+            b += 1
+        elif i == 2:
+            c += 1
+        elif i == 3:
+            d += 1
+
+    print('a,b,c,d\n', a, b, c, d)
+
+    center = model.cluster_centers_
+    print(center)
+    colors = ['r', 'b', 'y', 'g']
+    # 画出
+    new_x_data = center[:, 0]
+    new_y_data = center[:, 1]
+    new_z_data = center[:, 2]
+    ax = plt.figure().add_subplot(111, projection='3d')
+    ax.scatter(new_x_data, new_y_data, new_z_data, c=colors, s=30)
+    plt.show()
+
+
+def add_pred_to_file():
+    data = pd.read_csv('level_file2.csv')
+    print(data)
+    c = 0
+    level_list = []
+    num_list = []
+    for i in range(0, data.shape[0]):
+        level_list.append(data.loc[i, '预测评级'])
+        num_list.append(data.loc[i, '企业代号'])
+
+    sum_list = []
+    count = 0
+    start = 124
+    for each in level_list:
+        if each == start:
+            count += each
+        sum_list.append(count)
+        start += 1
+        count = 0
 
 
 if __name__ == '__main__':
@@ -219,5 +289,5 @@ if __name__ == '__main__':
     # bagging_model()  # 0.79
     # handle_file2()
     # pred_file2()
-    l = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
-    print(sum(l))
+    # pred_level()
+    add_pred_to_file()

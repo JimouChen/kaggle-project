@@ -1,9 +1,4 @@
-"""
-# @Time    :  2020/9/10
-# @Author  :  Jimou Chen
-"""
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
 
 
 def handle_en_msg():
